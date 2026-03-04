@@ -1,25 +1,18 @@
+# Use official Python image
 FROM python:3.9
 
-# Ensure Python logs are sent straight to terminal
-ENV PYTHONUNBUFFERED=1
+# Set working directory
+WORKDIR /code
 
-WORKDIR /app
+# Copy requirements and install
+COPY ./requirements.txt /code/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
-# Copy requirements and install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy the rest of the files
+COPY . /code
 
-# Create a non-root user for Hugging Face Spaces security
-RUN useradd -m -u 1000 user
-USER user
-ENV HOME=/home/user \
-    PATH=/home/user/.local/bin:$PATH
+# Expose the port Hugging Face uses
+EXPOSE 7860
 
-WORKDIR $HOME/app
-
-# Copy the rest of the application files to the user's app directory
-# Fixed the split line issue from previous version
-COPY --chown=user . $HOME/app
-
-# Hugging Face Spaces requires port 7860
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "7860"]
+# Run Streamlit app instead of FastAPI
+CMD ["streamlit", "run", "streamlit_app.py", "--server.port=7860", "--server.address=0.0.0.0"]
