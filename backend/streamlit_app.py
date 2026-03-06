@@ -19,11 +19,10 @@ def search_food_database(search_query: str) -> str:
     try:
         if tavily_client:
             response = tavily_client.search(query=search_query, max_results=5)
-            results = response.get("results", [])
-            if not results:
-                return json.dumps({"error": "No data found."})
-            combined_text = " ".join([res['content'] for res in results])
-            return json.dumps({"status": "success", "data": combined_text})
+            results = response.get("results", []) 
+            if results:
+                combined_text = " ".join([res['content'] for res in results])
+                return json.dumps({"status": "success", "data": combined_text})
         results = DDGS().text(search_query, max_results=5)
         if not results:
             return json.dumps({"error": "No data found."})
