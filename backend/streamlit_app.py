@@ -4,6 +4,7 @@ import json
 import traceback
 from groq import Groq
 from duckduckgo_search import DDGS
+from tavily import TavilyClient
 
 # ==========================================
 # 1. AGENT CONFIGURATION & TOOLS
@@ -12,8 +13,17 @@ from duckduckgo_search import DDGS
 client = Groq(api_key=os.environ.get("GROQ_KEY"))
 MODEL = "llama-3.3-70b-versatile"
 
+tavily_client = TavilyClient() if os.environ.get("TAVILY_API_KEY") else None
+
 def search_food_database(search_query: str) -> str:
     try:
+        if tavily_client:
+            response = tavily_client.search(query=search_query, max_results=5)
+            results = response.get("results", [])
+            if not results:
+                return json.dumps({"error": "No data found."})
+            combined_text = " ".join([res['content'] for res in results])
+            return json.dumps({"status": "success", "data": combined_text})
         results = DDGS().text(search_query, max_results=5)
         if not results:
             return json.dumps({"error": "No data found."})
