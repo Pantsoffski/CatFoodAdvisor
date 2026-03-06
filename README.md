@@ -17,7 +17,7 @@ Unlike standard chatbots, this advisor is a **ReAct Agent** with an interactive 
 
 * **Frontend & App Framework:** Streamlit
 * **AI Engine:** Groq (Llama 3.3 70B Versatile)
-* **Search Tool:** DuckDuckGo Search API
+* **Search Tools:** Tavily Search API (Primary) & DuckDuckGo Search API (Fallback)
 * **Language:** Python 3.9+
 * **Deployment:** Hugging Face Spaces (Docker)
 
@@ -34,7 +34,7 @@ To run this AI Agent locally on your machine:
 
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/YourUsername/CatFoodAdvisor.git](https://github.com/YourUsername/CatFoodAdvisor.git)
+   git clone [https://github.com/Pantsoffski/CatFoodAdvisor.git](https://github.com/Pantsoffski/CatFoodAdvisor.git)
    cd CatFoodAdvisor
    ```
 
@@ -46,10 +46,12 @@ To run this AI Agent locally on your machine:
 3. Set your Groq API key as an environmental variable:
    ```bash
    # On macOS/Linux
-   export GROQ_KEY='your_api_key_here'
+   export GROQ_KEY='your_groq_api_key_here'
+   export TAVILY_API_KEY='your_tavily_api_key_here' # Optional
    
    # On Windows (Command Prompt)
-   set GROQ_KEY=your_api_key_here
+   set GROQ_KEY=your_groq_api_key_here
+   set TAVILY_API_KEY=your_tavily_api_key_here # Optional
    ```
 
 4. Run the Streamlit application:
