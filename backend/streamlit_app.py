@@ -50,39 +50,43 @@ def calculate_dry_matter(protein, fat, moisture, ash, fiber, calcium=0.0, phosph
 # 2. STREAMLIT UI SETUP
 # ==========================================
 
-st.set_page_config(page_title="Cat Food Advisor AI", page_icon="🐱", layout="centered")
+st.set_page_config(page_title="Cat Food Advisor", page_icon="🐱", layout="centered")
 
-st.title("🐱 Cat Food Advisor AI")
-st.markdown("Autonomous AI Agent evaluating pet food quality based on real-time data.")
-st.markdown("---")
+st.title("🐱 Cat Food Advisor")
+st.markdown("A smart tool to help you evaluate your cat's food quality based on veterinary guidelines.")
 
-# Sidebar for Cat Profile
-st.sidebar.header("🐾 Cat Profile")
-cat_breed = st.sidebar.text_input("Breed", placeholder="e.g. British Shorthair")
-cat_age = st.sidebar.number_input("Age (years)", min_value=0, max_value=30, value=5)
-cat_health = st.sidebar.text_area("Health Issues", placeholder="e.g. chronic kidney disease, obesity")
+# Using subheaders instead of headers to reduce vertical whitespace
+st.subheader("🐾 Cat Profile")
 
-st.sidebar.markdown("---")
-st.sidebar.header("⚙️ Agent Settings")
-unit_standard = st.sidebar.radio(
+col1, col2 = st.columns(2)
+with col1:
+    cat_breed = st.text_input("Breed", placeholder="e.g. British Shorthair")
+    cat_age = st.number_input("Age (years)", min_value=0, max_value=30, value=5)
+with col2:
+    # Set height to roughly match the two inputs on the left
+    cat_health = st.text_area("Health Issues", placeholder="e.g. kidney disease, obesity", height=112)
+
+st.subheader("⚙️ Settings")
+unit_standard = st.radio(
     "Nutritional Standard",
-    options=["European (FEDIAF) / Metric", "US (AAFCO) / Imperial"],
-    help="Determines which veterinary guidelines the Agent uses."
+    options=["European (FEDIAF)", "US (AAFCO)"],
+    index=0,
+    horizontal=True,
+    help="Determines which veterinary guidelines to use."
 )
 
-# Main Content
 st.subheader("🥫 Food Analysis")
 food_name = st.text_input("Food Name", placeholder="Enter exact brand and flavor name...")
 
-if st.button("Analyze Food ✨"):
+if st.button("Analyze Food ✨", use_container_width=True):
     if not food_name or not cat_breed:
         st.warning("Please provide at least the Cat Breed and Food Name.")
     else:
-        with st.spinner("Agent is researching and calculating... 🧪"):
+        with st.spinner("Researching and calculating... 🧪"):
             try:
-                # DETOXED PROMPT - No meta-instructions on HOW to call tools
+                # DETOXED PROMPT
                 system_prompt = (
-                    "You are an expert Veterinary Nutritionist Agent evaluating cat food.\n"
+                    "You are an expert Veterinary Nutritionist evaluating cat food.\n"
                     "Your task is to analyze the food and calculate its dry matter composition.\n"
                     "1. ALWAYS use the 'search_food_database' tool first to find Protein, Fat, Moisture, Ash, Fiber, Calcium, Phosphorus, and Taurine.\n"
                     "2. Next, ALWAYS use the 'calculate_dry_matter' tool. (If moisture is not found, input 10. If other values are missing, input 0).\n"
@@ -104,7 +108,6 @@ if st.button("Analyze Food ✨"):
                     {"role": "user", "content": f"Analyze: '{food_name}' for cat: {cat_breed}, {cat_age}yo, Health: {cat_health}."}
                 ]
                 
-                # Ultra-simple tool descriptions
                 tools = [
                     {
                         "type": "function",
@@ -114,10 +117,7 @@ if st.button("Analyze Food ✨"):
                             "parameters": {
                                 "type": "object",
                                 "properties": {
-                                    "search_query": {
-                                        "type": "string", 
-                                        "description": "The search query string."
-                                    }
+                                    "search_query": {"type": "string", "description": "The search query string."}
                                 },
                                 "required": ["search_query"]
                             }
@@ -177,3 +177,7 @@ if st.button("Analyze Food ✨"):
                         break
             except Exception as e:
                 st.error(f"An error occurred: {e}")
+
+# Disclaimer placed at the very bottom of the page
+st.markdown("<br><br>", unsafe_allow_html=True)
+st.caption("⚠️ **Disclaimer:** This tool provides AI-generated informational insights based on public web data and does not constitute professional veterinary or medical advice. Always consult a qualified veterinarian before making any changes to your pet's diet, especially if your cat has specific health conditions.")
