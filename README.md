@@ -1,8 +1,10 @@
-# 🐱 Cat Food Advisor AI - ReAct Agent
+# 🐱 Cat Food Advisor AI - ReAct Agent [![Try it Live](https://img.shields.io/badge/Try%20it%20Live-Hugging%20Face%20Space-FCD21D?logo=huggingface)](https://huggingface.co/spaces/Pantsoffski/cat-food-advisor)
 
-[![Try it Live](https://img.shields.io/badge/Try%20it%20Live-Hugging%20Face%20Space-FCD21D?logo=huggingface)](https://huggingface.co/spaces/Pantsoffski/cat-food-advisor)
-
-![Cat Food Advisor App Screenshot](images/image.png)
+<div align="center">
+  <a href="images/image.png">
+    <img src="images/image.png" alt="App Screenshot" height="600">
+  </a>
+</div>
 
 An autonomous AI Agent built with Streamlit that evaluates cat food quality based on professional veterinary standards (FEDIAF or AAFCO) using real-time web data.
 
